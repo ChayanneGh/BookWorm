@@ -1,6 +1,6 @@
 ﻿namespace BookWorm.Hub.Sql;
 
-public class PrestamiSql
+public class PrestamoSql
 {
     public const string Insert =
     "INSERT INTO Prestamos (EstudianteId, LibroId, FechaPrestamo) " +
