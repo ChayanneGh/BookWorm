@@ -2,7 +2,7 @@
 
 public class Ddl
 {
-    public const string CreateEstudianteTable = @"
+    private const string CreateEstudianteTable = @"
         CREATE TABLE Estudiante (
             IdEstudiante INT PRIMARY KEY,
             Nombre NVARCHAR(100),
@@ -11,7 +11,7 @@ public class Ddl
             Cedula NVARCHAR(20)
         );";
 
-    public const string CreateLibroTable = @"
+    private const string CreateLibroTable = @"
         CREATE TABLE Libro (
             IdLibro INT PRIMARY KEY,
             Titulo NVARCHAR(100),
@@ -19,7 +19,7 @@ public class Ddl
             ISBN NVARCHAR(20)
         );";
 
-    public const string CreatePrestamoTable = @"
+    private const string CreatePrestamoTable = @"
         CREATE TABLE Prestamo (
             IdPrestamo INT PRIMARY KEY,
             IdEstudiante INT,
@@ -30,7 +30,7 @@ public class Ddl
             FOREIGN KEY (IdLibro) REFERENCES Libro(IdLibro)
         );";
 
-    public const string CreateDevolucionTable = @"
+    private const string CreateDevolucionTable = @"
         CREATE TABLE Devolucion (
             IdDevolucion INT PRIMARY KEY,
             IdPrestamo INT,
@@ -38,4 +38,13 @@ public class Ddl
             Observaciones NVARCHAR(255),
             FOREIGN KEY (IdPrestamo) REFERENCES Prestamo(IdPrestamo)
         );";
+
+    private static readonly string[] ConcatStrings =
+    {
+        CreateDevolucionTable,
+        CreateEstudianteTable,
+        CreateLibroTable,
+        CreatePrestamoTable
+    };
+    public static readonly string TablesCreate = string.Join("\n", ConcatStrings);
 }

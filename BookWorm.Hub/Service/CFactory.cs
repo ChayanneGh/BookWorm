@@ -1,4 +1,6 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using BookWorm.Hub.Sql;
+using Dapper;
+using Microsoft.Data.Sqlite;
 
 namespace BookWorm.Hub.Service;
 
@@ -11,8 +13,9 @@ public class CFactory(IConfiguration configuration)
         return new SqliteConnection(_connection);
     }
 
-    public void Initialize()
+    public async Task Initialize()
     {
-
+        using var connection = GetConnection();
+        await connection.ExecuteAsync(Ddl.TablesCreate);
     }
 }
