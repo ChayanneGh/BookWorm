@@ -6,22 +6,24 @@ namespace BookWorm.Hub.Service;
 
 public class LibroSrv(CFactory factory)
 {
-    public async Task Create(LibroMdl libro)
+    public async Task<LibroMdl> Create(LibroMdl libro)
     {
         using var connection = factory.GetConnection();
-        await connection.ExecuteAsync(LibroSql.Insert, libro);
+        int Id = await connection.ExecuteScalarAsync<int>(LibroSql.Insert, libro);
+
+        return libro with { IdLibro = Id };
     }
 
-    public async Task Read()
+    public async Task<IEnumerable<LibroMdl>> Read()
     {
         using var connection = factory.GetConnection();
-        await connection.QueryAsync<LibroMdl>(LibroSql.Select);
+        return await connection.QueryAsync<LibroMdl>(LibroSql.Select);
     }
 
-    public async Task ReadOne(int Id)
+    public async Task<LibroMdl> ReadOne(int Id)
     {
         using var connection = factory.GetConnection();
-        await connection.QueryAsync<LibroMdl>(LibroSql.SelectbyId, new { Id });
+        return await connection.QueryFirstOrDefaultAsync<LibroMdl>(LibroSql.SelectbyId, new { Id });
     }
 
     public async Task Update(LibroMdl libro)

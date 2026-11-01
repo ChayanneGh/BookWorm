@@ -10,4 +10,9 @@ public class CFactory(IConfiguration configuration)
     {
         return new SqliteConnection(_connection);
     }
+
+    public void Initialize()
+    {
+
+    }
 }

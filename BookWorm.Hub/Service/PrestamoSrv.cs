@@ -6,22 +6,24 @@ namespace BookWorm.Hub.Service;
 
 public class PrestamoSrv(CFactory factory)
 {
-    public async Task Create(PrestamoMdl prestamo)
+    public async Task<PrestamoMdl> Create(PrestamoMdl prestamo)
     {
         using var connection = factory.GetConnection();
-        await connection.ExecuteAsync(PrestamoSql.Insert, prestamo);
+        int Id = await connection.ExecuteScalarAsync<int>(PrestamoSql.Insert, prestamo);
+
+        return prestamo with { IdPrestamo = Id };
     }
 
-    public async Task Read()
+    public async Task<IEnumerable<PrestamoMdl>> Read()
     {
         using var connection = factory.GetConnection();
-        await connection.QueryAsync<PrestamoMdl>(PrestamoSql.Select);
+        return await connection.QueryAsync<PrestamoMdl>(PrestamoSql.Select);
     }
 
-    public async Task ReadOne(int Id)
+    public async Task<PrestamoMdl> ReadOne(int Id)
     {
         using var connection = factory.GetConnection();
-        await connection.QueryAsync<PrestamoMdl>(PrestamoSql.SelectbyId, new { Id });
+        return await connection.QueryFirstOrDefaultAsync<PrestamoMdl>(PrestamoSql.SelectbyId, new { Id });
     }
 
     public async Task Update(PrestamoMdl prestamo)

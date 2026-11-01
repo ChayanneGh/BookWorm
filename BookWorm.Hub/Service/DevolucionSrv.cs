@@ -6,22 +6,24 @@ namespace BookWorm.Hub.Service;
 
 public class DevolucionSrv(CFactory factory)
 {
-    public async Task Create(DevolucionMdl devolucion)
+    public async Task<DevolucionMdl> Create(DevolucionMdl devolucion)
     {
         using var connection = factory.GetConnection();
-        await connection.ExecuteAsync(DevolucionSql.Insert, devolucion);
+        int Id = await connection.ExecuteScalarAsync<int>(DevolucionSql.Insert, devolucion);
+        
+        return devolucion with { IdDevolucion = Id };
     }
 
-    public async Task Read()
+    public async Task<IEnumerable<DevolucionMdl>> Read()
     {
         using var connection = factory.GetConnection();
-        await connection.QueryAsync<DevolucionMdl>(DevolucionSql.Select);
+        return await connection.QueryAsync<DevolucionMdl>(DevolucionSql.Select);
     }
 
-    public async Task ReadOne(int Id)
+    public async Task<DevolucionMdl> ReadOne(int Id)
     {
         using var connection = factory.GetConnection();
-        await connection.QueryAsync<DevolucionMdl>(DevolucionSql.SelectbyId, new { Id });
+        return await connection.QueryFirstOrDefaultAsync<DevolucionMdl>(DevolucionSql.SelectbyId, new { Id });
     }
 
     public async Task Update(DevolucionMdl devolucion)

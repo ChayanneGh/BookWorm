@@ -6,22 +6,24 @@ namespace BookWorm.Hub.Service;
 
 public class EstudianteSrv(CFactory factory)
 {
-    public async Task Create(EstudianteMdl estudiante)
+    public async Task<EstudianteMdl> Create(EstudianteMdl estudiante)
     {
         using var connection = factory.GetConnection();
-        await connection.ExecuteAsync(EstudianteSql.Insert, estudiante);
+        int Id = await connection.ExecuteScalarAsync<int>(EstudianteSql.Insert, estudiante);
+
+        return estudiante with { IdEstudiante = Id };
     }
 
-    public async Task Read()
+    public async Task<IEnumerable<EstudianteMdl>> Read()
     {
         using var connection = factory.GetConnection();
-        await connection.QueryAsync<EstudianteMdl>(EstudianteSql.Select);
+        return await connection.QueryAsync<EstudianteMdl>(EstudianteSql.Select);
     }
 
-    public async Task ReadOne(int Id)
+    public async Task<EstudianteMdl> ReadOne(int Id)
     {
         using var connection = factory.GetConnection();
-        await connection.QueryAsync<EstudianteMdl>(EstudianteSql.SelectbyId, new { Id });
+        return await connection.QueryFirstOrDefaultAsync<EstudianteMdl>(EstudianteSql.SelectbyId, new { Id });
     }
 
     public async Task Update(EstudianteMdl estudiante)
